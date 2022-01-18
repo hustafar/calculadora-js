@@ -99,7 +99,7 @@ body {
   aspect-ratio: initial;
 }
 
-[data-button='enter'] {
+[data-button='Enter'] {
   aspect-ratio: initial;
   grid-column: 4 / 5;
   grid-row: 4 / 6;
@@ -109,6 +109,16 @@ body {
   aspect-ratio: initial;
   grid-column: 4 / 5;
   grid-row: 2 / 4;
+}
+
+[data-button='backspace'] > svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+[data-button='backspace'] svg g * {
+  stroke: black;
+  stroke-width: 0.125rem;
 }
 
 .calculadora-digit {
