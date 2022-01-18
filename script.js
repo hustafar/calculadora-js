@@ -19,10 +19,27 @@ function animaButton({ target }) {
   }, 100);
 }
 
+function checkButton({ target }) {
+  console.log(target.dataset.button);
+  if (regexHasNumber.test(target.dataset.button)) {
+    changeValue('number', target.dataset.button);
+  } else if (regexHasSign.test(target.dataset.button)) {
+    changeValue('sign', target.dataset.button);
+  } else if (regexHasDot.test(target.dataset.button)) {
+    changeValue('dot', target.dataset.button);
+  } else if (target.dataset.button === 'enter') {
+    changeValue('enter', target.dataset.button);
+  } else if (target.dataset.button === 'backspace') {
+    changeValue('backspace', target.dataset.button);
+  }
+}
+
 function buttonClickListener() {
   buttons.forEach((button) => {
     button.addEventListener('click', animaButton);
     button.addEventListener('touch', animaButton);
+    button.addEventListener('click', checkButton);
+    button.addEventListener('touch', checkButton);
   });
 }
 
@@ -50,7 +67,7 @@ function changeValue(type, digit) {
       break;
     case 'dot':
       if (regexHasSign.test(lastDigit) || value === '0' || isLastResult) {
-        updateResult(value + '0.');
+        updateResult(isLastResult || value === '0' ? '0.' : value + '0.');
         number = '0.';
         isLastResult = false;
       } else if (regexHasDot.test(number)) break;
