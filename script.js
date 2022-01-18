@@ -11,6 +11,14 @@ let value = '0';
 let number = null;
 let isLastResult = false;
 
+// Atualiza variável value
+function updateResult(newValue) {
+  value = newValue;
+  if (!value || value === '0' || value === 0) value = '0';
+  result.innerText = value;
+}
+
+// Adiciona e coloca um tempo para remover a classe de animação de click
 function animaButton({ target }) {
   target.classList.add(active);
 
@@ -19,36 +27,7 @@ function animaButton({ target }) {
   }, 100);
 }
 
-function checkButton({ target }) {
-  console.log(target.dataset.button);
-  if (regexHasNumber.test(target.dataset.button)) {
-    changeValue('number', target.dataset.button);
-  } else if (regexHasSign.test(target.dataset.button)) {
-    changeValue('sign', target.dataset.button);
-  } else if (regexHasDot.test(target.dataset.button)) {
-    changeValue('dot', target.dataset.button);
-  } else if (target.dataset.button === 'enter') {
-    changeValue('enter', target.dataset.button);
-  } else if (target.dataset.button === 'backspace') {
-    changeValue('backspace', target.dataset.button);
-  }
-}
-
-function buttonClickListener() {
-  buttons.forEach((button) => {
-    button.addEventListener('click', animaButton);
-    button.addEventListener('touch', animaButton);
-    button.addEventListener('click', checkButton);
-    button.addEventListener('touch', checkButton);
-  });
-}
-
-function updateResult(newValue) {
-  value = newValue;
-  if (!value || value === '0' || value === 0) value = '0';
-  result.innerText = value;
-}
-
+// Verifica condições para digito e caso caia em alguma condição ele atualiza a variável value e number de acordo
 function changeValue(type, digit) {
   const lastDigit = value.charAt(value.length - 1);
   switch (type) {
@@ -58,18 +37,26 @@ function changeValue(type, digit) {
       number = number ? number + String(digit) : String(digit);
       isLastResult = false;
       break;
+
     case 'sign':
-      if (!value || value === '0')
+      if (!value || value === '0' || value === '-')
         if (digit === '-') updateResult('-');
         else break;
       else if (!regexHasSign.test(lastDigit) && !regexHasDot.test(lastDigit)) updateResult(value + digit);
       else {
-        console.log(lastDigit);
-        updateResult(lastDigit === '/' || lastDigit === '*' ? value + digit : value.slice(0, -1) + digit);
+        const penulDigit = value.charAt(value.length - 2);
+        if (digit === '/' || digit === '*') {
+          if (penulDigit === '/' || penulDigit === '*') updateResult(value.slice(0, -2) + digit);
+          else updateResult(value.slice(0, -1) + digit);
+        } else {
+          if (penulDigit === '/' || penulDigit === '*') updateResult(value.slice(0, -1) + digit);
+          else updateResult(value + digit);
+        }
       }
       number = null;
       isLastResult = false;
       break;
+
     case 'dot':
       if (regexHasSign.test(lastDigit) || value === '0' || isLastResult) {
         updateResult(isLastResult || value === '0' ? '0.' : value + '0.');
@@ -81,11 +68,13 @@ function changeValue(type, digit) {
         number = number ? number + String('.') : String(null);
       }
       break;
+
     case 'enter':
       updateResult(String(eval(value)));
       isLastResult = true;
       number = null;
       break;
+
     case 'backspace':
       if (isLastResult) {
         updateResult(0);
@@ -95,11 +84,38 @@ function changeValue(type, digit) {
       updateResult(value.slice(0, -1));
       number = number ? number.slice(0, -1) : '0';
       break;
+
     default:
       break;
   }
 }
 
+// Checa que tipo de evento que o botão teve e altera seu valor
+function checkButton({ target }) {
+  if (regexHasNumber.test(target.dataset.button)) {
+    changeValue('number', target.dataset.button);
+  } else if (regexHasSign.test(target.dataset.button)) {
+    changeValue('sign', target.dataset.button);
+  } else if (regexHasDot.test(target.dataset.button)) {
+    changeValue('dot', target.dataset.button);
+  } else if (target.dataset.button === 'Enter') {
+    changeValue('enter', target.dataset.button);
+  } else if (target.dataset.button === 'backspace') {
+    changeValue('backspace', target.dataset.button);
+  }
+}
+
+// Adiciona listener para animação e checagem nos botões
+function buttonClickListener() {
+  buttons.forEach((button) => {
+    button.addEventListener('click', animaButton);
+    button.addEventListener('click', checkButton);
+    button.addEventListener('touch', animaButton);
+    button.addEventListener('touch', checkButton);
+  });
+}
+
+// Checa que tipo de evento que a tecla pressionada teve, aciona animação e chama a função para verificar se o digito é permitido
 function checkKey(e) {
   if (!/F\d/.test(e.key)) e.preventDefault();
   else return;
@@ -126,11 +142,12 @@ function checkKey(e) {
   if (button) animaButton({ target: button });
 }
 
+// Adiciona Listener para verificação de tecla
 function keyPress() {
   const key = window.addEventListener('keydown', checkKey);
 }
 
+// Chama as funções de adição de evento e atualiza o valor value para ser compatível com seu valor inicial
 buttonClickListener();
-// buttonPress();
 keyPress();
 updateResult(value);
