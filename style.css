@@ -99,7 +99,7 @@ body {
   aspect-ratio: initial;
 }
 
-[data-button='='] {
+[data-button='enter'] {
   aspect-ratio: initial;
   grid-column: 4 / 5;
   grid-row: 4 / 6;
