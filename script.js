@@ -63,7 +63,10 @@ function changeValue(type, digit) {
         if (digit === '-') updateResult('-');
         else break;
       else if (!regexHasSign.test(lastDigit) && !regexHasDot.test(lastDigit)) updateResult(value + digit);
-      else updateResult(value.slice(0, -1) + digit);
+      else {
+        console.log(lastDigit);
+        updateResult(lastDigit === '/' || lastDigit === '*' ? value + digit : value.slice(0, -1) + digit);
+      }
       number = null;
       isLastResult = false;
       break;
@@ -98,7 +101,8 @@ function changeValue(type, digit) {
 }
 
 function checkKey(e) {
-  e.preventDefault();
+  if (!/F\d/.test(e.key)) e.preventDefault();
+  else return;
 
   let button;
 
