@@ -59,8 +59,10 @@ function changeValue(type, digit) {
       isLastResult = false;
       break;
     case 'sign':
-      if (!value || value === '0') break;
-      if (!regexHasSign.test(lastDigit) && !regexHasDot.test(lastDigit)) updateResult(value + digit);
+      if (!value || value === '0')
+        if (digit === '-') updateResult('-');
+        else break;
+      else if (!regexHasSign.test(lastDigit) && !regexHasDot.test(lastDigit)) updateResult(value + digit);
       else updateResult(value.slice(0, -1) + digit);
       number = null;
       isLastResult = false;
