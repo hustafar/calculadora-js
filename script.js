@@ -11,6 +11,21 @@ let value = '0';
 let number = null;
 let isLastResult = false;
 
+let errors = [
+  {
+    regex: /^-$/,
+    message: 'Não é possível calcular apenas o sinal negativo',
+  },
+  {
+    regex: /[\/\*\-\+]$/,
+    message: 'Não é possível calcular com sinal no termino da expressão',
+  },
+  {
+    regex: /.*\/0([^.]|$|\.(0{4,}.*|0{1,4}([^0-9]|$))).*/, // achado na internet
+    message: 'Não é possível dividir por 0',
+  },
+];
+
 // Atualiza variável value
 function updateResult(newValue) {
   value = newValue;
@@ -25,6 +40,19 @@ function animaButton({ target }) {
   setTimeout(() => {
     target.classList.remove(active);
   }, 100);
+}
+
+// Checa value atual e caso encontre algum erro predefinido retorna ele
+function catchErrors() {
+  let tempErr = false;
+  error.innerText = '';
+  for (i = 0; i < errors.length; i++) {
+    if (errors[i].regex.test(value)) {
+      tempErr = errors[i].message;
+      break;
+    }
+  }
+  return tempErr;
 }
 
 // Verifica condições para digito e caso caia em alguma condição ele atualiza a variável value e number de acordo
@@ -70,9 +98,13 @@ function changeValue(type, digit) {
       break;
 
     case 'enter':
-      updateResult(String(eval(value)));
-      isLastResult = true;
-      number = null;
+      const errorCalc = catchErrors();
+      console.log(errorCalc);
+      if (!errorCalc) {
+        updateResult(String(eval(value)));
+        isLastResult = true;
+        number = null;
+      } else error.innerText = errorCalc;
       break;
 
     case 'backspace':
