@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+:root {
+  --body-color: rgba(240, 240, 240, 0.9);
+  --body-border: #3b3b3b;
+  --visor-color: #bbb;
+  --digit-bg: #3b3b3b;
+  --digit-color: #ddd;
+  --digit-click-color: yellow;
+  --digit-click-bg: green;
+  --operator-bg: #999;
+  --operator-color: #111;
+  --operator-click-color: yellow;
+  --operator-click-bg: green;
+}
+
+* {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(210, 72, 196);
+  background: -moz-linear-gradient(135deg, rgba(210, 72, 196, 0.9023810207676821) 0%, rgba(165, 79, 195, 0.8855742980786064) 40%, rgba(80, 215, 235, 0.9051821412158614) 100%);
+  background: -webkit-linear-gradient(135deg, rgba(210, 72, 196, 0.9023810207676821) 0%, rgba(165, 79, 195, 0.8855742980786064) 40%, rgba(80, 215, 235, 0.9051821412158614) 100%);
+  background: linear-gradient(135deg, rgba(210, 72, 196, 0.9023810207676821) 0%, rgba(165, 79, 195, 0.8855742980786064) 40%, rgba(80, 215, 235, 0.9051821412158614) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d248c4",endColorstr="#50d7eb",GradientType=1);
+}
+
+.calculadora-body {
+  display: flex;
+  flex-direction: column;
+  width: max(30vw, 320px);
+  background-color: var(--body-color);
+  border: 3px solid var(--body-border);
+  border-radius: 10px;
+}
+
+.calculadora-title {
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 0.25rem 0;
+}
+
+.calculadora-result {
+  position: relative;
+  background-color: var(--visor-color);
+  overflow: hidden;
+  height: 3rem;
+  margin: 0.5rem;
+  padding: 0.2rem 0;
+}
+
+.calculadora-result-value {
+  font-size: 2rem;
+  letter-spacing: 0.1rem;
+  position: absolute;
+  right: 0.5rem;
+}
+
+.calculadora-error {
+  color: rgb(206, 35, 35);
+  text-align: center;
+  margin: 0.5rem;
+}
+
+.calculadora-digits {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0.5rem;
+}
+
+.calculadora-digit,
+.calculadora-operator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.375rem;
+  cursor: pointer;
+  aspect-ratio: 2 / 1;
+  border-radius: 5px;
+  border: none;
+}
+
+[data-button='0'] {
+  grid-column: 1/3;
+  aspect-ratio: initial;
+}
+
+[data-button='='] {
+  aspect-ratio: initial;
+  grid-column: 4 / 5;
+  grid-row: 4 / 6;
+}
+
+[data-button='backspace'] {
+  aspect-ratio: initial;
+  grid-column: 4 / 5;
+  grid-row: 2 / 4;
+}
+
+.calculadora-digit {
+  color: var(--digit-color);
+  background-color: var(--digit-bg);
+}
+
+.calculadora-operator {
+  color: var(--operator-color);
+  background-color: var(--operator-bg);
+}
+
+.button-click {
+  animation: buttonClick 0.1s forwards ease-in-out;
+}
+
+[data-anima='fadeIn'] {
+  animation: fadeIn 0.2s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: initial;
+  }
+}
+
+@keyframes buttonClick {
+  from {
+    /* background-color: var(--operator-click-bg);
+    color: var(--operator-click-color); */
+    filter: invert(100%);
+  }
+  to {
+    /* background-color: var(--operator-bg);
+    color: var(--operator-color); */
+    filter: initial;
+  }
+}
