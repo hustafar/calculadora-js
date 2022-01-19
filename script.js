@@ -57,6 +57,7 @@ function catchErrors() {
 
 // Verifica condições para digito e caso caia em alguma condição ele atualiza a variável value e number de acordo
 function changeValue(type, digit) {
+  const penulDigit = value.charAt(value.length - 2);
   const lastDigit = value.charAt(value.length - 1);
   switch (type) {
     case 'number':
@@ -72,7 +73,6 @@ function changeValue(type, digit) {
         else break;
       else if (!regexHasSign.test(lastDigit) && !regexHasDot.test(lastDigit)) updateResult(value + digit);
       else {
-        const penulDigit = value.charAt(value.length - 2);
         if (digit === '/' || digit === '*') {
           if (penulDigit === '/' || penulDigit === '*') updateResult(value.slice(0, -2) + digit);
           else updateResult(value.slice(0, -1) + digit);
@@ -99,7 +99,6 @@ function changeValue(type, digit) {
 
     case 'enter':
       const errorCalc = catchErrors();
-      console.log(errorCalc);
       if (!errorCalc) {
         updateResult(String(eval(value)));
         isLastResult = true;
@@ -110,11 +109,28 @@ function changeValue(type, digit) {
     case 'backspace':
       if (isLastResult) {
         updateResult(0);
+        number = null;
         isLastResult = false;
         break;
       }
+
       updateResult(value.slice(0, -1));
-      number = number ? number.slice(0, -1) : '0';
+
+      if (regexHasSign.test(lastDigit)) {
+        if (!regexHasSign.test(penulDigit)) {
+          let i = value.length - 1;
+          let tempNumber = '';
+          while (!regexHasSign.test(value[i]) && i >= 0) {
+            tempNumber = value[i] + tempNumber;
+            i--;
+          }
+          number = tempNumber === '' ? number : tempNumber;
+        } else {
+          number = null;
+        }
+      } else {
+        number = number ? (number.slice(0, -1) === '' ? null : number.slice(0, -1)) : null;
+      }
       break;
 
     default:
