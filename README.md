@@ -1,4 +1,3 @@
-
 ![Logo](https://hustafar.github.io/calculadora-js/logo-calculadora.jpg)
 
 # Calculadora JS
@@ -21,6 +20,7 @@ A calculadora suporta os seguintes inputs do teclado:
 - , ou . (ambos resultam no input de . para evitar problemas matemáticos)
 - Enter (para calcular o resultado)
 - Backspace (para apagar o último digito)
+
 ## Prevenção de erros
 
 Com a intenção de prever erros a calculadora faz duas coisas:
